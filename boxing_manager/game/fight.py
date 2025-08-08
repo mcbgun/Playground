@@ -37,7 +37,10 @@ class Fight:
         winner = self.decision()
         self.log.append(f"The fight goes to a decision...")
         self.log.append(f"Final Score: {self.boxer1.name} {self.boxer1_score} - {self.boxer2_score} {self.boxer2.name}")
-        self.log.append(f"{winner.name} wins by decision!")
+        if winner:
+            self.log.append(f"{winner.name} wins by decision!")
+        else:
+            self.log.append("The fight is a draw!")
         return self.log, winner
 
     def simulate_round(self, round_num):
@@ -82,7 +85,8 @@ class Fight:
         attacker.current_stamina -= 2 # Cost of throwing a punch
 
         if random.randint(1, 100) < chance_to_hit:
-            damage = (attacker.punching_power / 10) * random.uniform(0.8, 1.2) * stamina_factor
+            chin_modifier = (1 - (defender.chin - 50) / 100)
+            damage = (attacker.punching_power / 10) * random.uniform(0.8, 1.2) * stamina_factor * chin_modifier
             defender.health -= damage
             self.log.append(f"{attacker.name} lands a punch on {defender.name}! (Health: {defender.health:.1f})")
             return True
